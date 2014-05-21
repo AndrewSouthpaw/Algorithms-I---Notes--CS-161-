@@ -160,8 +160,49 @@ Case 2:  T(n) <= O(n^2)
 
 
 
+/////////////////////////////////////////////////////////////////////
+4.4 - Proof of Master Method
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
+Preamble
+=======================================
+
+Assume: recurrence is
+			i. T(1) <= c
+			ii. T(n) <= aT(n/b) + cn^d
+			for some constant c
+		and...
+			n is a power of b
+			(general case similar, but more tedious)
+
+
+
+Analysis (similar to MergeSort)
+=======================================
+
+At level j = 0,1,...log(base b)(n), 
+	there are a^j subproblems each of size n/(b^j)
+	
+Recursion tree:
+
+	level 0				(input size n)
+					/        |            \  (a branches)
+	level 1      (n/b)      (n/b)       (n/b)
+						...
+	level logb(n)	......................... base cases size 1
+
+Work at level j [ignoring work in recursive calls]:
+	<= a^j              *     c * [n/(b^j)]^d  
+	  # of lvl-j subproblems     size of each level-j subproblem
+							 work per level-j subproblem (by ii. in assumption)
+
+	=  cn^d * [a/(b^d)]^j
+
+
+Total work:
+	Summing over all levels
+	total work <= cn^d * sum(j=0,log(base b)(n))[a/(b^d)]^j
 
 
 
