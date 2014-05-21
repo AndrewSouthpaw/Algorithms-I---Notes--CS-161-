@@ -382,11 +382,79 @@ QuickSort(array A, length n) {
 
 
 
+/////////////////////////////////////////////////////////////////////
+5.2 - Partition Subroutine
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+In-Place Implementation
+=======================================
+
+Assume: pivot = 1st element of array.
+Could swap pivot element to be 1st and still use this implementation
+
+High-level idea:
+	[p][ already partitioned ][unpartitioned]
+	- single scan through array
+	- invariant: everything we've looked at is partitioned
+
+Two boundaries: between partitioned and unpartitioned (j)
+			    between < p and > p (i)
+
+At each step, we want to advance j.
+When you encounter element < pivot, swap with element after i, and advance i
+Terminate with swapping pivot and element to the left of i
+
+
+
+Pseudocode
+=======================================
+
+partition(A, l, r) {
+	p = A[l]
+	i = l+1
+	for j = l+1 to r
+		if A[j] < p   // if A[j] > p, do nothing
+			swap A[j] and A[i]  // doesn't avoid redundant swaps when no elements
+			                    // exist bigger than the pivot
+			i++
+	swap A[l] and A[i-1]
+}
+
+
+
+Running time
+=======================================
+
+T(n) <= O(n), where n = r - l + 1 is length of input (sub)array
+Reason: O(1) work per array entry
+Also: clearly works in place (repeated swaps)
+
+
+
+
+Correctness
+=======================================
+
+Claim: the for loop maintains the invariant: [p][ < p ][ > p][ ?    ]
+
+1) A[l+1],...,A[i-1] are all less than pivot
+2) A[i],...,A[j-1] are all greater than pivot
+Exercise: check this by induction
+
+Upshot: at end of for loop and you swap the pivot, the pivot is
+"in rightful place"
+
+QED
 
 
 
 
 
+
+/////////////////////////////////////////////////////////////////////
+
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
 
