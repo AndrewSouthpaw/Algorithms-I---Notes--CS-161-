@@ -505,6 +505,55 @@ So: after recursive calls, entire array correctly sorted.
 
 
 
+/////////////////////////////////////////////////////////////////////
+5.4 - Choosing a Good Pivot
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+Running time of QuickSort depends on "quality of pivot" -- how well does it
+roughly divide the problem into two equal subproblems
+
+E.g. if you choose first element of sorted array, you get TH(n^2)
+Reason:
+	Partition subroutine: O(n)
+	Subcalls is on zero elements and n-1 elements, so you make n calls
+	>= n + (n-1) + (n-2) +...+ 1 = n^2
+
+
+Suppose we always get the median element as pivot.
+Runtime is TH(n log(n))
+Reason:
+	Let T(n) = running time on arrays of size n
+Then:
+	T(n) <= 2T(n/2) + O(n) => master method => O(n log n)
+	In this case, O(n) is actually TH(n), so we can call it TH(n log n)
+	because you can strengthen such statements in the Master Method
+
+
+
+Random pivots
+=======================================
+Big idea: choose random pivots!
+Randomized algorithms... Boom.
+
+Hope: a random pivot is "pretty good" "often enough"
+1) Intuition: if we always get a 25-75 split, good enough for O(n log n)
+Exercise: prove this via recursion tree
+
+2) half of elements give a 25-75 split or better (for 1-100, [26,75])
+
+
+
+
+
+Average running time of QuickSort
+=======================================
+The average running time of QuickSort with random pivots is O(n log n)
+for every input array of length n
+- "average" is over random choices made by algorithm
+
+
+
 
 
 
