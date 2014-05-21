@@ -1,0 +1,943 @@
+
+=====================================================================
+Section 1 - Introduction
+=====================================================================
+
+/////////////////////////////////////////////////////////////////////
+1.2 - Integer Multiplication
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+Input: two n-digit numbers x and y.
+Output: the product x * y
+"Primitive operation": add or multiple 2 single-digit numbers
+
+Grade-school algorithm:
+		 5678
+   	   x 1234
+   	   ------
+        22712   
+       17034- 
+      11356--
+      5678---
+     ========
+      7006652
+
+This algorithm is "correct": the algorithm terminates with the correct answer
+for any input.
+
+To compute 22712, we multiplied 4 by 5,6,7,8 
+<= 2n operations per row, n rows
+Thus, need 2n^2 operations for rows, then add those 2n^2
+
+Upshot: # operations overall <= constant * n^2   Quadratic.
+
+"Perhaps the most important principle for the good algorithm designer is to
+refuse to be content." - The Design and Analysis of Computer Algorithms (1974)
+CAN WE DO BETTER?
+
+
+/////////////////////////////////////////////////////////////////////
+1.3 - Karatsuba Multiplication
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+x = 5678
+y = 1234
+
+a = 56, b = 78, c = 12, d = 34
+
+Step 1: compute a * c = 672
+Step 2: compute  b * d = 2652
+Step 3: compute (a + b)*(c+d) = 134 * 46 = 6164
+Step 4: compute (3) - (2) - (1) = 2840
+Step 5: Take (1) pad with 4 zeros
+		Take (2) pad with 0 zeros
+		Take (3) pad with 3 zeros
+		
+		6720000
+           2652
+         284000
+    + =========
+        7006652 
+
+
+
+
+Recursive Algorithm
+=======================================
+
+Write x = 10^(n/2) * a + b  and  y = 10^(n/2) * c + d
+where a,b,c,d are n/2-digit numbers
+
+Then: x*y = (10^(n/2)*a + b) * (10^(n/2) * c + d)
+	      = 10^n * ac + 10^(n/2) (ad + bc) + bd = (*)
+	    
+	(*) has smaller expressions: ac, ad, bc, bd
+
+Idea: recursively compute ac,ad,bc,bd, then compute (*) in straightforward way
+Base case: 1-digit
+
+Step 1: recursively compute ac
+Step 2: recursively compute bd
+Step 3: recursively compute (a+b)(c+d) = ac + ad + bc + bd
+Gauss's trick: take (3) - (1) - (2) = ad + bc!  BRILLIANT.
+Upshot: only need 3 recursive multiplications and some additions
+
+
+
+/////////////////////////////////////////////////////////////////////
+1.4 - About the Course
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+Topics: vocabulary, divide and conquer, randomization, primitives, data structs
+
+Vocabulary
+	- "Big-Oh" notation
+	- "sweet spot" for high-level reasoning about algorithms
+
+Divide and conquer
+	- apply to: integer multiplication, sorting, matrix multiplication,
+	            closest pair
+	- general analysis methods ("Master Method/Theorem")
+
+Randomization
+	- apply to: QuickSort, primality testing, graph partitioning, hashing
+
+Primitives for reasoning about graphs
+	- connectivity information, shortest paths, structure of information,
+	  social networks
+
+Data structures
+	- heaps, balanced BSTs, hashing, variants (bloom filters)
+
+
+Supporting materials
+=======================================
+
+"Mathematics for Computer Science" - Lehman
+Kleinberg/Tardos, Algorithm Design, 2005 - free online version
+Dasgupta/Papdimitriou/Vazirani, Algorithms, 2006
+Cormen/Leiserson/Rivest/Stein, Introduction to Algorithms, 2009 - free online
+Mehlhorn/Sanders, Data Structures and Algorithms: The Basic Toolbox, 2008
+
+
+
+/////////////////////////////////////////////////////////////////////
+1.5 - Merge Sort
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+Improves over Selection, Insertion, Bubble sorts
+
+The Sorting Problem
+=======================================
+
+Input: array of n numbers unsorted
+Output: same numbers in sorted increasing order
+Assume they're distinct.
+(How would you do it if they weren't distinct?)
+
+
+Merge Sort
+=======================================
+
+Split into two halves, solve left and right halves recursively, then merge
+					54187263
+				5418      7263
+				recursive calls
+			 	1458     2367
+			 		(merge)
+     			 	12345678
+
+
+
+/////////////////////////////////////////////////////////////////////
+1.6 - Merge Sort Pseudocode
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+
+Merge: populate new array by walking down pointers of subarrays
+
+C = output array [length = n]
+A = 1st sorted array [n/2]
+B = 2nd sorted array [n/2]
+
+Counter i for A, j for B
+i = 1
+j = 1
+
+Take smallest of each counter for each next space in array
+For k = 1 to n
+	if A(i) < B(j)
+		C(k) = A(i)
+		i++
+	else [B(j) < A(i) ]
+		C(k) = B(j)
+		j++
+end
+
+// ignoring end cases of falling off each subarray
+
+
+
+Merge Sort running time
+=======================================
+
+Key question: how many times must you hit enter along debugger?
+			  running time ~= # of lines of code executed
+
+Merge
+Initilizing i, j = 2 operations
+running for loop = n operations of (1 comparison, 2 operations, incr k = 1 op)
+Total running time <= 4m + 2
+                   <= 6m (since m >= 1)
+
+
+Claim: MergeSort requires <= 6n * log2(n) + 6n operations to sort n numbers
+
+(How to think about log2(x). Take x, divide by 2. Keep dividing by 2 until you
+drop below 2. That is the number.)
+
+
+
+/////////////////////////////////////////////////////////////////////
+1.7 - Merge Sort Analysis
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+Proof of claim (assuming n = power of 2):
+=======================================
+
+Will use "recursion tree"
+
+level 0                   root 0  (entire input)
+outer call to MS
+
+level 1             0  [left]         0  [right]
+1st recursive calls              
+
+etc.
+
+What is the level number at the leaves? log2(n)
+Base cases = single-element arrays
+
+At each level j=0,1,2,...,log2(n), there are 2^j subproblems, of size n/(2^j)
+
+Merge sort recursive calls are free. So you just have the merge.
+Total # of ops at level j:
+
+	<= 2^j * 6(n/2^j) = 6n -- independent of level j
+	This happens because the amount of problems we do is doubling, but the
+	work we do per sub-problem halves
+	
+Total <= 6n            * (log2(n) + 1)
+		work per level   # of levels
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////
+1.8 - Guiding Principles for Analysis of Algorithms
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+Guiding principle #1: worst-case analysis
+=======================================
+our running time bound holds for every input of length n
+Worst-case, as opposed to:
+	- "average-case" analysis
+	- benchmarks - one agrees about benchmark inputs of practical inputs
+	both require domain knowledge
+
+Worst-case appropriate for "general-purpose" routines
+Bonus: usually easier to analyze
+
+
+Guiding principle #2: don't worry about constant factors, lower-order terms
+=======================================
+
+Justifications
+	- way easier
+	- constant factors depend on architecture, compiler, programmer
+	- lose little predictive power
+	
+
+Guiding principle #3: asymptotic analysis (large inputs)
+=======================================
+
+E.g. merge sort only better than insertion sort when n is sufficiently big
+	6n log2(n) + 6n          1/2 n^2
+	 mergesort               insertionsort
+	 
+Justification: only big problems are interesting!
+	  
+
+Fast algorithm = worst-case running time grows slowly with input size
+Holy grail = linear running time
+
+
+
+
+
+
+=====================================================================
+Section 2 - The Gist
+=====================================================================
+
+
+/////////////////////////////////////////////////////////////////////
+2.1 - The Gist
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+Asymptotic analysis: "big-Oh" notation
+- identifies sweet spot for high-level reasoning about algorithms
+- coarse enough to suppress architecture/language/compiler/etc
+- sharp enough to make predictive comparisons
+
+High-level idea: suppress constant factors and lower-order terms
+
+Example: equate 6n*log2(n) with just n*log(n)
+Terminology: running time is O(nlogn)
+
+
+
+Example: One Loop
+=======================================
+
+Problem: does array A contain integer t?
+
+	for i = 1 to n
+		if A[i] == t return TRUE
+	return FALSE
+
+Running time is O(n).
+Worst case is array does not contain t, must scan all numbers.
+
+
+
+Example: Two Loops
+=======================================
+
+Problem: given A, B arrays and t integer. Does A or B contain t?
+
+	for i = 1 to n
+		if A[i] == t return TRUE
+	for i = 1 to n
+		if B[i] == t return TRUE
+	return FALSE
+
+Running time is O(n).
+It's actually more like 2n, but constant factors are suppressed.
+
+
+
+Example: Two Nested Loops
+=======================================
+
+Problem: given A, B arrays and t integer. Does A or B contain common t?
+
+	for i = 1 to n
+		for j = 1 to n
+			if A[i] == B[j] return TRUE
+	return FALSE
+
+Running time is O(n**2).
+Quadratic time algorithm
+
+
+Example: Two Nested Loops (II)
+=======================================
+
+Problem: does array A have duplicate entries?
+
+	for i = 1 to n
+		for j = i+1 to n
+			if A[i] == A[j] return TRUE
+	return FALSE
+
+Running time is O(n**2).
+Roughly n**2 / 2, but the 1/2 factor gets suppressed.
+
+
+
+/////////////////////////////////////////////////////////////////////
+2.2 - Big-Oh Notation
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+Let T(n) = function on n=1,2,3...
+[usually, the worst-case running time of an algorithm]
+
+Question: when is T(n) = O(f(n))?
+Answer: if eventually (for large n), T(n) is bounded above by constant
+		multiple of f(n)
+		
+A constant multiple of f(n), say 2f(n), will eventually cross T(n)
+
+
+Formal definition:
+	T(n) = O(f(n)) if and only if there exist constants c, n_0 > 0 such that
+			T(n) <= c*f(n)
+	for all n >= n_0.
+	c,n_0 *cannot* depend on n
+		
+Graphical representation at 2:45
+
+
+
+
+/////////////////////////////////////////////////////////////////////
+2.3 - Some examples
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+Example #1
+=======================================
+
+Claim: if T(n) = a_k * n**k + ... + a_1 * n + a_0 then
+			T(n) = O(n**k)
+
+(Prove that Big-Oh suppresses constant factors)
+
+Proof:
+		Choose n_0 = 1 and c = |a_k| + |a_(k-1)| + ... + |a_1| + |a_0|
+		Show that for all n >= 1, T(n) <= c * n**k
+		We have for every n >= 1,
+			T(n) <= |a_k|n**k + ... + |a_1|n + |a_0|   
+			... replace all n with n**k
+			T(n) <= |a_k|n**k + ... + |a_1|n**k + |a_0|n**k
+				  = c*n**k
+				  QED.
+				  
+
+Example #2
+=======================================
+
+Claim: for every k >= 1, n**k is not O(n**(k-1))
+
+Proof: by contradiction. Suppose n**k = O(n**(k-1))
+		Then there exists constants c,n_0 > 0 such that
+			n**k <= c*n**k-1  for all n >= n_0
+		But then canceling n**k-1 from both sides:
+			n <= c for all n >= n_0
+		Which is clearly false. [Contradiction.]
+
+
+
+/////////////////////////////////////////////////////////////////////
+2.4 - Big Omega and Theta
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+Omega Notation
+=======================================
+
+Definition: T(n) = OM(f(n)) if and only if there exists constants c,n_0 s.t.
+				T(n) >= c*f(n) for all n >= n_0
+
+Graphic at 1:25.
+
+Eventually c*f(n) is always less than T(n). 
+
+
+
+
+Theta Notation
+=======================================
+
+Definition: T(n) = TH(f(n)) if and only if
+			T(n) = O(f(n)) AND T(n) = OM(f(n))
+			
+Equivalent: there exists constants c_1,c_2,n_0 s.t.
+		c_1*f(n) <= T(n) <= c_2*f(n)
+		for all n >= n_0
+
+Programmers will often use O when it's actually TH, but that's okay.
+
+
+
+Ex/
+	T(n) = 1/2*n**2 + 3n
+	What is true?
+	T(n) = OM(n)  -- [n_0 = 1, c = 1/2]
+	T(n) = TH(n**2) -- [n_0 = 1, c_1 = 1/2, c_2 = 4]
+	T(n) = O(n**3) -- [n_0 = 1, c = 4]
+
+
+
+Little-Oh Notation
+=======================================
+
+Strictly less than notation
+Definition: 
+		T(n) = o(f(n)) iff for all constants c > 0, there exists a constant n_0
+		s.t.
+			T(n) < c*f(n) f.a. n >= n_0
+
+
+
+
+/////////////////////////////////////////////////////////////////////
+2.5 - Additional Examples
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+Example #1
+=======================================
+
+Claim: 2**(n+10) = O(2**n)
+Proof: 2**(n+10) <= c*2**n f.a. n>=n_0
+
+Note 2**(n+10) = 2**10 * 2**n = 1024 * 2**n
+Choose c = 1024, n_0 = 1, then this holds.
+
+
+
+Example #2
+=======================================
+
+Claim: 2**10n != O(2**n)
+Proof: by contradiction. 2**10n = O(2**n), then 2**10n <= c * 2**n
+Cancelling 2**n on both sides:
+	2**9n <= c, clearly false
+
+
+
+Example #3
+=======================================
+
+Claim: for every pair of positive functions f(n), g(n),  (always for class)
+		max[f,g] = TH(f(n) + g(n))
+
+Proof: [max[f,g] = TH(f(n) + g(n))]
+For every n, we have
+	max {f(n), g(n)} <= f(n) + g(n), assuming f and g are positive functions
+and
+	2*max {f(n), g(n)} >= f(n) + g(n)
+Thus
+	1/2 (f(n) + g(n)) <= max{f(n),g(n)} <= f(n) + g(n) f.a. n >= 1
+Therefore
+	max{f,g} = TH(f(n) + g(n))
+		where n_0 = 1, c_1 = 1/2, c_2 = 1
+
+
+
+
+
+=====================================================================
+Section 3 - Divide and Conquer Paradigm
+=====================================================================
+
+
+/////////////////////////////////////////////////////////////////////
+3.1 - O(n log n) Algorithm for Counting Inversions I
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+Divide and Conquer Paradigm
+=======================================
+1. DIVIDE into smaller subproblems
+2. CONQUER via recursive calls
+3. COMBINE solutions of subproblems into one for original problem
+
+
+
+The Problem
+=======================================
+
+Input: array A containing the numbers 1,2,3...n in some arbitrary order
+Output: number of inversions (number of pairs i,j of array indices with
+		i < j and A[i] > A[j]
+
+
+Examples and motivation
+=======================================
+
+Ex: [1,3,5,2,4,6]
+Inversions: 3,2; 5,2; 5,4
+Graphical representation 4:25. Check number of crossing lines
+
+Motivation: numerical similarity measure between two ranked lists.
+(Ex. how similar are top 10 movie rankings between two friends. More inversions
+ mean more dissimilarity)
+
+Useful in "collaborative filtering" -- example, "people who bought this
+also bought..."
+
+In general, n choose 2 = (n(n-1))/2 is largest possible inversions
+
+ 
+ High-level approach
+=======================================
+
+Brute-force: TH(n**2) time
+Can we do better? Yes! Divide and conquer.
+
+Call inversion [i,j] [with i < j]:
+	LEFT if i,j <= n/2
+	RIGHT if i,j > n/2
+	SPLIT if i <= n/2 < j
+(whether inversion occurs on left or right half of array, or split across)
+Left and right can be computed recursively
+Split needs separate subroutine
+
+
+Count(array A, length n)
+	if n=1 return 0
+	else
+		x = Count(1st half of A, n/2)
+		y = Count(2nd half of A, n/2)
+		z = CountSplitInv(A,n)
+	return x+y+z
+
+Goal: implement CountSplitInv in linear (O(n)) time, then Count is O(n log n)
+
+
+
+
+/////////////////////////////////////////////////////////////////////
+3.2 - O(n log n) Algorithm for Counting Inversions II
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+Key idea #2: have recursive calls both Count inversions and sort, piggyback
+on Merge Sort
+
+Motivation: merge subroutine naturally uncovers split inversions
+
+
+
+SortAndCount(array A, length n)
+	if n=1 return 0
+	else
+		(B,x) = SortAndCount(1st half of A, n/2)
+		(C,y) = SortAndCount(2nd half of A, n/2)
+		(D,z) = MergeAndCountSplitInv(B,C,n)
+	return x+y+z
+
+
+Pseudocode for Merge
+=======================================
+
+D = output length n
+B = 1st sorted array [n/2]
+C = 2nd
+i=1, j=1
+
+	for k=1 to n
+		if B(i) < C(j)
+			D(k) = B(i)
+			i++
+		else [C(j) < B(i)]
+			D(k) = C(j)
+			j++
+	end
+
+Remember that array A with no split inversions means all of B < all of C
+If everything in B is less than C, then all of B is copied over to D before C
+Then, Every copy from C before B means a split inversion.
+
+Ex/
+Consider merging [1,3,5] and [2,4,6]
+Output: copying over 2 from C before others. Exposes 2 split inversions.
+
+
+General claim
+=======================================
+
+Claim: split inversions involving element y of 2nd array C are the numbers
+left in the 1st array B when y is copied to output D
+
+Proof: let x be element of B.
+	1. if x copied to output D before y, then x < y. No inversion.
+	2. if y copied to output D before x, then y < x.
+		x & y are a split inversion
+
+
+MergeAndCountSplitInv
+=======================================
+
+- While merging the two sorted subarrays, keep running total of
+  number of split inversions.
+- when element of 2nd array C copied to D, increment total by number of elements
+  remaining in B
+  
+Runtime of subroutine: O(n) [merge] + O(n) [running total] = O(n)
+Thus SortAndCount runs in O(n log n) time like MergeSort
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////
+3.3 - Strassen's Subcubic Matrix Multiplication Algorithm
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+Matrix multiplication
+=======================================
+
+x * y = z for nxn matrices
+where z_ij = (ith row x) . (jth column y)
+		   = sum(x_ik * y_kj) for k = 1 to n
+Input size = O(n**2)
+
+ a  b  *  e  f  =   ae + bg   af + bh
+ c  d     g  h      ce + dg   cf + dh
+
+Run-time: TH(n**3)
+Recall: z_ij = sum k:1.n (x_ik * y_kj)
+Sum is TH(n), multiplication is n**2, so overall TH(n**3)
+
+
+
+Applying divide and conquer
+=======================================
+
+Divide x into four quadrants
+Write X = ( A  B )   and  Y = ( E  F )
+          ( C  D )            ( G  H )
+
+Where A-H are n/2 * n/2 matrices, "blocks"
+Then X * Y = ( AE+BG  AF+BH )
+             ( CE+DG  CF+DH )
+
+
+
+Recursive algorithm #1
+=======================================
+
+Step 1: recursively compute the 8 necessary products
+Step 2: do the necessary additions (TH(n**2) time)
+Fact: runtime is TH(n**3)  -- follows from master method
+
+
+
+Strassen's Algorithm (1969)
+=======================================
+
+Step 1: recursively compute only 7 products
+Step 2: do the necessary (clever) additions + subtractions (still TH(n**2))
+Fact: better than cubic time!
+
+
+The Details
+=======================================
+
+Seven products:
+	P1 = A(F-H)
+	P2 = (A+B)H
+	P3 = (C+D)E
+	P4 = D(G-E)
+	P5 = (A+D)(E+H)
+	P6 = (B-D)(G+H)
+	P7 = (A-C)(E+F)
+	
+Claim: X * Y = ... = ( P5+P4-P2+P6    P1+P2     )
+                     ( P3+P4        P1+P5-P3-P7 )
+
+Question: where did this come from?  WHO KNOWS?!
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////
+3.4 - O(n log n) Algorithm for Closest Pair
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+Input: a set P = {p1,...pn} of n points in plane (R**2)
+Notation: d(pi,pj) = Euclidean distance
+				   = ( (x_i-x_j)**2 + (y_i-y_j)**2 )**0.5
+
+Output: a pair p*,q* among all points that has minimum distance
+
+
+Initial observations
+=======================================
+
+Assume (for convenience): all points have distinct x and y-coords
+Brute force: O(n**2)
+
+1-D version of closest pair:
+	1. sort points (O(n log n) time)
+	2. return closest pair of adjacent points (O(n) time)
+
+Goal: O(n log n) time algorithm for 2-D version
+
+
+High-level approach
+=======================================
+
+1. make copies of points sorted by x-coord (Px) and 
+                                by y-coord (Py) 
+        (O(n log n) time)
+	but this is not enough
+
+2. use D&C 
+
+
+ClosestPair(Px, Py)
+=======================================
+
+1. Let Q = left half of P     Base case: with 2 or 3, solve in constant time
+       R = right half of R
+   Form Qx,Qy,Rx,Ry  [takes O(n) time]
+
+2. (p1,q1) = ClosestPair(Qx,Qy)
+3. (p2,q2) = ClosestPair(Rx,Ry)
+  Unlucky case: closest pair split between Q and R
+4. (p3,q3) = ClosestSplitPair(Px,Py)
+5. return best of the three pairs
+
+Key idea: only need to compute closest split pair in "unlucky case" where
+          its distance is less than d(p1,q1) and d(p2,q2)
+
+
+1. Let Q = left half of P     Base case: with 2 or 3, solve in constant time
+       R = right half of R
+   Form Qx,Qy,Rx,Ry  [takes O(n) time]
+2. (p1,q1) = ClosestPair(Qx,Qy)
+3. (p2,q2) = ClosestPair(Rx,Ry)
+4. Let delta = min{d(p1,q1), d(p2,q2)}
+5. (p3,q3) = ClosestSplitPair(Px,Py,delta)
+6. return best of the three pairs
+
+
+ClosestSplitPair(Px, Py, delta)
+=======================================
+
+Let xbar = biggest x-coordinate in left of P (O(1) time)
+Look at strip of points in delta range centered around xbar
+
+Let Sy = points of P with x-coord in [xbar - delta, xbar + delta], sorted by
+		 y-coordinate [O(n) time]
+This is why we sorted at the start, rather than in the subroutines.
+
+	Initialize best = delta, bestpair = NULL
+	for i = 1 to |S_y| - 1
+		for j = 1 to min{7, |S_y| - i}
+			Let p,q = ith, (i+j)th points of S_y
+			If d(p,q) < best
+				bestpair = (p,q), best = d(p,q)
+		[O(1) time because it's only up to 7]
+	at end, return best pair
+	[All is O(n) time]
+
+
+
+Correctness Claim
+=======================================
+
+Claim: Let p exists in Q, q exists in R, be a split pair with
+	   d(p,q) < delta. 
+	
+Then: A) p and q are members of S_y (survive filtering step)
+	  B) p and q are at most 7 positions apart in S_y (considered in for loop)
+
+Corollary 1: If closest pair of P is split pair, then ClosestSplitPair finds it.
+Corollary 2: ClosestPair is correct, and runs in O(n log n) time
+
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////
+3.5 - O(n log n) Algorithm for Closest Pair II
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+Proof of Claim A
+=======================================
+
+Let p = (x_1, y_1) in Q, q = (x_2, y_2) in R, d(p,q) < delta
+
+Note: since d(p,q) < delta, |x_1 - x_2| < delta and |y_1 - y_2| < delta.
+
+(A) says i.e. x1, x2 exist in [x-bar - delta, x-bar + delta]
+
+Note: p exists in Q, => x1 <= x-bar and q in R => x2 >= x-bar
+
+x1 and x2 are at most delta apart, and x1 is <= x-bar, so x2 is less than
+x-bar + delta.
+
+
+
+
+Proof of Claim B
+=======================================
+
+Key: draw 8x delta / 2 * delta / 2 boxes with center x-bar and bottom is
+     min(y1, y2)
+     
+     1. We argue one box on left contains p, one box on right contains q, and
+     2. They are sparesely populated, each box contains at most 1 point
+    
+
+Lemma 1:
+	All points Sy with y-coordinate between p and q inclusive lie in one of
+	these 8 boxes.
+	
+Proof:
+	Recall y-coord of p,q differ by < delta. The lower coord is at bottom of
+	diagram.
+	
+	Second, by definition of Sy, all have x-coord between x-bar +/- delta
+
+
+
+Lemma 2:
+	At most one point of p in each box
+
+Proof:
+	By contradiction. 
+	Suppose a,b lie in same box. Then,
+		i. a,b are either both in Q or both in R
+		ii. d(a,b) <= delta/2 * sqrt(2) < delta.
+	i and ii contradict the definition of delta as smallest distance between
+	pairs of points in Q or in R.
+
+
+
+Lemmas 1 and 2 => at most 8 points in picture of 8 boxes.
+Thus, at most separated by 7 positions.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,97 @@
+Week 2
+
+
+
+=====================================================================
+Section 4 - The Master Method
+=====================================================================
+
+
+/////////////////////////////////////////////////////////////////////
+4.1 - Motivation
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+T(n) = max number ops algorithm needs
+Express T(n) in terms of running time of recursive calls
+
+Recall integer multiplication
+
+Base case: T(1) <= a constant
+For all n > 1: T(n) <= 4T(n/2) + O(n) 
+               (recursive work)  (work here)
+
+Algorithm #2 (Gauss): recursively compute ac, bd, (a+b)(c+d)
+recall ad + bc = (3) - (1) - (2)
+
+New recurrence: 
+	Base case: T(1) <= a constant
+	For n > 1: T(n) <= 3T(n/2) + O(n)
+	
+
+
+
+/////////////////////////////////////////////////////////////////////
+4.2 - Formal statement
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+Cool feature: a "black box" for solving recurrences.
+Assumption: all subproblems have equal size
+
+
+Recurrence format
+=======================================
+
+1) Base case: T(n) <= a constant for sufficiently small n
+2) For all larger n: 
+		T(n) <= a*T(n/b) + O(n^d)
+		
+		where a = number of recursive calls ( >=1)
+		      b = factor by which input size shrinks ( >1)
+		      d = exponent in running time of "combine step" ( >= 0)
+			[a,b,d independent of n]
+
+
+
+
+The Master Method
+=======================================
+
+Upper bounded by...
+
+T(n) = {	O(n^d * log(n))		if a = b^d  Case 1
+			O(n^d)				if a < b^d  Case 2
+			O(n^log(base b)(a))	if a > b^d  Case 3
+
+
+In case 1, log base doesn't matter. log(base e) and log(base 2) differ
+by constant factor.
+
+In case 3, log base matters because it's in the exponent.
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
