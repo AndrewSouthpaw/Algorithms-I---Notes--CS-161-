@@ -178,8 +178,8 @@ Assume: recurrence is
 
 
 
-Analysis (similar to MergeSort)
-=======================================
+Analysis (similar to MergeSort) using recursion tree
+====================================================
 
 At level j = 0,1,...log(base b)(n), 
 	there are a^j subproblems each of size n/(b^j)
@@ -203,18 +203,61 @@ Work at level j [ignoring work in recursive calls]:
 Total work:
 	Summing over all levels
 	total work <= cn^d * sum(j=0,log(base b)(n))[a/(b^d)]^j
+		call it (*)
+
+
+
+/////////////////////////////////////////////////////////////////////
+4.5 - Interpretation for 3 Cases
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+Interpretation:
+	ratio of a/b^d is key to running time
+	
+	a = rate of subproblem proliferation (RSP)
+	b^d = rate of work shrinkage per subproblem (RWS)
+	
+
+Tug of war between forces of good (RWS) and evil (RSP)!
+
+
+Statements:
+	- If RSP < RWS, then amount of work is descreasing with recur level j
+			True.
+	- If RSP > RWS, then amount of work is increasing with recur level j
+			True.
+	- No conclusions can be drawn about how amount of work varies with recur
+	  level j unless RSP and RWS are equal
+	  		False, given i and ii
+	- If RSP and RWS are equal, amount of work is same at every recur level j
+
+
+
+Intuition for 3 cases
+=======================================
+
+Upper bound for level j:  cn^d * (a/b^d)^j
+
+1) RSP = RWS => same amount of work each level
+	[expect O(n^d*log(n))]
+
+2) RSP < RWS => less work each level => most work at root
+	[might expect O(n^d)]
+
+3) RSP > RWS => more work each level => most work at leaves
+	[might expect O(# leaves)]
+
+
+Case 3: how do we get n^log(base b)(a)?
 
 
 
 
 
-
-
-
-
-
-
-
+/////////////////////////////////////////////////////////////////////
+4.6 - Proof II
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
 
