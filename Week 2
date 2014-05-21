@@ -453,8 +453,61 @@ QED
 
 
 /////////////////////////////////////////////////////////////////////
-
+5.3 - Correctness of Quicksort [optional]
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+Induction Review
+=======================================
+
+Let P(n) = assertion parameterized by positive integers n.
+
+For us: 
+	P(n) is "QuickSort correctly sorts every input array of length n"
+
+How to prove P(n) for all n >= 1 by induction:
+	1) [base case] directly prove the P(1) holds
+	2) [inductive step] for every n >= 2, prove that:
+		if P(k) holds for all k < n, then P(n) holds as well
+		|-inductive hypothesis ----|
+
+
+
+
+Correctness of QuickSort
+=======================================
+
+P(n) = "QuickSort correctly sorts every input array of length n"
+
+Claim: 
+	P(n) holds for every n >= 1, regardless of pivot selection
+
+Proof by induction:
+	1) [base case] every input array of length 1 is already sorted
+		QuickSort returns the input array, which is correct. ( P(1) holds)
+	2) [inductive step] Fix n >= 2. Fix some input array A of length n.
+		Show: if P(k) holds for all k < n, then P(n) holds as well
+		
+Recall:
+	QuickSort partitions A around some pivot p.  [ < p ][ p ][ > p ]
+Note:
+	pivot winds up in correct position.
+
+Let k_1, k_2 = lengths of 1st, 2nd parts of partitioned array.
+	k_1, k_2 < n
+
+By inductive hypothesis: 1st, 2nd parts get sorted correctly by recursive calls.
+	(using P(k_1), P(k_2), which are correct by inductive hypothesis)
+
+So: after recursive calls, entire array correctly sorted.
+
+
+
+
+
+
+
+
 
 
 
