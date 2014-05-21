@@ -618,6 +618,54 @@ Thus:
 
 
 
+General Decomposition Principle
+=======================================
+1. Identify random variable Y that you care about
+2. Express Y as sum of indicator random variables:
+		C = sum(l=1,m){ X_l }
+3. Apply linearity of expectation:
+		E[Y] = sum(l=1,m){ Pr[X_l=1] }
+
+
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////
+6.2 - Analysis II - The Key Insight
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+Key claim: f.a. i < j, Pr[X_ij=1] = 2 / (j-i+1)
+
+
+
+Proof of Key Claim
+=======================================
+Fix z_i, z_j with i < j
+Consider set z_i, z_i+1,...,z_j-1, z_j
+Inductively: as long as none of these are chosen as a pivot, all are passed
+			 to the same recursive call
+Consider the first among z_i,z_i+1,...z_j-1,z_j that gets chosen as a pivot
+1. if z_i or z_j gets chosen first, they get compared
+2. if one of inside range gets chosen first, they do not get compared
+
+
+Since pivot chosen uniformly at random, total outcomes j - i + 1
+Pr[X_ij] = 2 / (j-i+1)
+QED!
+
+
+E[C] = sum(i=1,n-1){ sum(j=i+1,n){ 2 / (j-i+1) }}   (*)
+
+
+
+
+
+
+
 
 
 
