@@ -333,9 +333,50 @@ QED!
 
 
 
+=====================================================================
+Section 5 - Quicksort - Algorithm
+=====================================================================
 
 
 
+/////////////////////////////////////////////////////////////////////
+5.1 - Quicksort overview
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+ Input: array of n numbers, unsorted [3 8 2 5 1 4 7 6]
+ Output: same numbers, sorted in increasing order
+ Assume: all entries distinct
+ Exercise: extend QuickSort to handle duplicate entries
+ 
+ 
+Partitioning around a pivot
+======================================
+ 
+Key idea: partition array around pivot element
+- pick element of array
+- rearrange element so:
+	left of pivot => less than pivot
+	right of pivot => greater than pivot
+Note: puts pivot in its "rightful position"
+
+
+Two cool facts about partition
+=======================================
+1) linear time, no extra memory (only doing swaps)
+2) reduces problem size 
+
+
+High-level description
+=======================================
+
+QuickSort(array A, length n) {
+	if n = 1 return
+	p = choosePivot(A,n)
+	partition A around p
+	recursively sort 1st part
+	recursively sort 2nd part
+}
 
 
 
