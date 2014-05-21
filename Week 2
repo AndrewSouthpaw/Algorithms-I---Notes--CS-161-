@@ -572,6 +572,66 @@ We need: finite sample spaces, random variables, expectation,
 
 
 
+Preliminaries
+=======================================
+
+Sample space Omega = all possible outcomes of random choices in QS
+					 (i.e. pivot sequences)
+Key random var: for sigma in Omega,
+	C(sigma) = # of comparisons between two input elements made by QS
+
+Lemma: running time of QS dominated by comparisons
+		i.e. there exists constant c s.t. f.a. sigma in Omega,
+		     RT(sigma) <= c * C(sigma)
+
+Need to prove E[C] = O(n logn)
+
+
+
+
+Building Blocks
+=======================================
+Note: can't apply Master Method [random, unbalanced subproblems]
+[ A = fixed input array ]
+Notation: z_i = ith smallest element of A
+For sigma in Omega, indices i < j, let
+	X_ij(sigma) = # of times z_i, z_j get compared in QS
+
+
+Given two elements in array, elements could get compared 0 or 1 times
+In partition: Pivot element is compared to each other array element once
+Can't get more than 1 because the pivot is excluded in the recursion.
+Thus: each X_ij is an "indicator" (0,1) random variable
+
+
+
+C(sigma) = # of comparisons between input elements
+X_ij(sigma) = # of comparisons between z_i and z_j
+Thus: f.a. sigma, C(sigma) = sum(i=1,n-1){ sum(j=i+1,n){ X_ij(sigma) }}
+By LINEXP:
+	E[C] = sum(i=1,n-1){ sum(j=i+1,n){ E[X_ij] }}
+	LHS is complicated, RHS is simple.
+Since E[X_ij] = 0 * Pr[X_ij=0] + 1 * Pr[X_ij=1] = Pr[X_ij=1]
+Thus:
+	E[C] = sum(i=1,n-1){ sum(j=i+1,n){ Pr[z_i, z_j get compared] }} (*)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -636,6 +696,8 @@ Then:
 		E[ sum(i=1,n)[ X_i ] ] = sum(i=1,n)[ E[X_i] ]
 Crucially: holds even when X_i's are not independent
 (Would fail if replacing sums with products)
+
+"Expectation of a sum is the sum of the expectations"
 
 Ex#1: if X_1, X_2 = the two dice
 	  E[X_j] = 1/6(1+2+3+4+5+6) = 3.5
