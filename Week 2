@@ -664,6 +664,36 @@ E[C] = sum(i=1,n-1){ sum(j=i+1,n){ 2 / (j-i+1) }}   (*)
 
 
 
+/////////////////////////////////////////////////////////////////////
+6.3 - Analysis III - Final calculations
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+E[C] = 2 * sum(i=1,n-1){ sum(j=i+1,n){ 1 / (j-i+1) }}
+		   | ---- TH(n^2) terms ------------------|
+		   
+How big can first sum be?
+
+For each fixed i, the inner sum is
+	sum(j=i+1,n){ 1/(j-i+1) } = 1/2 + 1/3 + 1/4 +...
+
+So: E[C] <= 2 * n * sum(k=2,n){ 1/k }
+
+
+
+Claim: sum(k=2,n){ 1/k } <= ln n.
+Pictoral proof: 
+/Users/andrewsouthpaw/Documents/Programming/Algorithms Part I/Notes/Images/1.png
+
+
+
+So: E[C] <= 2n ln n
+
+
+
+
+
+
+
 
 
 
