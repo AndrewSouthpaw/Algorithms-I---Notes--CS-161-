@@ -824,6 +824,35 @@ E[Y] = E[ sum(j=1,n)[ X_j ] ]
 	
 
 
+/////////////////////////////////////////////////////////////////////
+7.2 - Probability Review - Part II
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+
+Conditional Probability
+=======================================
+
+Let X, Y <= OM be events
+Pr[X|Y] = Pr[X n Y] / Pr[Y]
+("X given Y")
+
+
+
+
+Independence
+=======================================
+Events are independent iff
+	Pr[X n Y] = Pr[X] * Pr[Y]
+This holds <=> Pr[X|Y] = Pr[X] <=> Pr[Y|X] = Pr[Y]
+
+
+Independence (of random variables)
+=======================================
+Random variables A, B are independent <=> the events Pr[A=a], Pr[B=b]
+are independent for all a,b [<=> Pr[A=a and B=b] = Pr[A=a]*Pr[B=b]
+
+If A,B are independent, then E[A*B] = E[A]*E[B]
 
 
 
