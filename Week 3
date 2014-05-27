@@ -273,7 +273,28 @@ We'll focus on Adjacency Lists
 
 
 
+/////////////////////////////////////////////////////////////////////
+9.3 - Random Contraction Algorithm
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
+
+Algorithm
+=======================================
+while there are more than 2 vertices:
+	- pick a remaining edge (u,v) uniformly at random
+	- merge ("contract") u and v into single vertex
+	- remove self-loops
+return cut represented by final 2 vertices
+
+Sometimes identifies min cut, sometimes it doesn't, depending on order.
+
+
+
+
+
+Example
+=======================================
+See slide for visual example of contraction
 
 
 
