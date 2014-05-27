@@ -147,6 +147,64 @@ QED
 
 
 
+=====================================================================
+Section 9 - Graphs and Contraction Algorithm
+=====================================================================
+
+
+/////////////////////////////////////////////////////////////////////
+9.1 - Graphs and Minimum Cuts
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+Graphs
+=======================================
+Two ingredients
+	- vertices aka nodes (V) - objects
+	- edges (E) = pairs of vertices
+		- can be undirected [unordered pair]
+		      or directed [tail, head of ordered pair, aka arcs]
+
+Examples: road netowrks, the web, social networks, precedence constraints
+
+
+
+
+Cuts of Graphs
+=======================================
+A cut of a graph (V,E) is partition of V into two non-empty sets A,B
+The "crossing edges" of cut (A,B) are those with:
+	- one endpoint in each (A,B) [undirected]
+	- tail in A, head in B [directed]
+
+For graph with n vertices, roughly 2^n cuts  (technically 2^n - 2)
+
+
+
+
+Minimum cut problem
+=======================================
+Input: undirected graph G = (V,E)
+	   [parallel edges allowed]
+	   [see other video for representation of input]
+Goal: compute cut with fewest number of crossing edges ("min cut")
+
+
+
+
+Applications
+=======================================
+- Identify weaknesses (fewer links) of network (e.g. transportation network)
+- Community detection (tightly-knit pockets of people, highly connected within
+                       themselves, weakly connected to everyone else)
+- Image segmentation
+		- input = graph of pixels
+		- use edge weights [(u,v) has large weight <=> "expect" u,v to come from
+		                    same object]
+		- hope: repeated min cuts identify primary objects in picture
+
+
+
+
 
 
 
