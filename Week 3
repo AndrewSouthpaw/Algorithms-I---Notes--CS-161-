@@ -387,6 +387,26 @@ But, can get big speedups to roughly O(n^2) w/ more ideas
 
 
 
+/////////////////////////////////////////////////////////////////////
+9.5 - Counting Number of Minimum Cuts
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+A graph can have multiple minimum cuts.
+Question: what's the largest min cuts a graph can have?
+Answer: n choose 2 = n(n-1)/2
+
+
+Lower bound: 
+	consider n-cycle.
+	Each pair n edges defines distinct min cut w/ two crossing edges.
+	>= n choose 2 min cuts
+	
+Upper bound:
+	Allow set of (A_x,B_x) be min cuts of graph 
+	Pr[output = (A_i,B_i)] >= 2/(n(n-1)) = 1/(n choose 2) for all i
+		^-- call this S_i
+	S_i are disjoint events (only one can happen)
+	t / (n choose 2) <= 1 =>  t <= n choose 2
 
 
 
