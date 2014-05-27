@@ -82,6 +82,65 @@ of RSelect is O(n)
 
 
 
+/////////////////////////////////////////////////////////////////////
+8.1 - Randomized Selection - Analysis
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+
+Proof I: Tracking Progress via Phases
+=======================================
+Note: RSelect uses <= cn operations outside recursive call [c >0] in partitioning
+Notation: RSelect is in phase j 
+		  if current array size b/n (3/4)^(j+1)*n and (3/4)^j*n
+		  X_j = number of recursive calls during phase j
+Why? we want to cleanly talk about the progress. X_j will help us with that.
+
+
+running time RSelect <= sum(phases j){X_j * c * (3/4)^j*n}
+												^-- <= array size in j
+											^-- work per subproblem
+									  ^-- # of phase-j subproblems
+
+
+
+
+
+Proof II: Reduction to Coin Flipping
+=======================================
+X_j = # of recursive calls during phase j b/n size (3/4)^(j+1)*n and (3/4)^j*n
+Note: if RSelect chooses pivot giving 25-75 split (or better), 
+	  then current phase ends. New subarray length <= 75% old length
+Recall: Probability of this is 50%. Like a coin flip.
+So: E[X_j] <= expected number of times you need to flip coin to see "heads"
+
+
+
+Proof III: Coin Flipping Analysis
+=======================================
+Let N = number of coin flips until you get heads
+		(a "geometric random variable")
+E[N] = 1 + 1/2*E[N]
+	   ^-- 1st coin flip
+	       ^-- probability of tails
+	           ^-- # of further coin flips needed in this case
+Solution: E[N] = 2.
+
+
+
+Putting it all together
+=======================================
+running time RSelect <= E[cn * sum(phases j){(3/4)^j * X_j]}
+LIN EXP=>
+					  = cn * sum(phase j){(3/4)^j*E[X_j]}
+					  = 2cn * sum(phase j){(3/4)^j}
+					                       ^-- from Master Method, geometric sum,
+					                           <= 1/(1-n) = 1/(1-3/4) = 4
+					<= 8cn
+					
+Thus running time = O(n)
+QED
+
 
 
 
