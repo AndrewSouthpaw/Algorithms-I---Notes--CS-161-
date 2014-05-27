@@ -11,3 +11,107 @@ Section 8 - Linear-Time Selection
 /////////////////////////////////////////////////////////////////////
 8.1 - Randomized Selection
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+Input: array A with n distinct numbers and a number i
+Output: ith order statistic
+Example: median: i = (n+1)/2 for n odd, n/2 for n even
+
+
+
+Reduction to sorting
+=======================================
+1. apply MergeSort
+2. return ith element of sorted array
+Problem: can't sort any faster than nlog(n)
+Next: O(n) time (randomized) by modifying QuickSort
+Optional: O(n) time deterministic algorithm
+			- pivot = "median of medians" (not as practical)
+
+
+
+Using QuickSort
+=======================================
+Partition around pivot. To get ith element array, you only need to recurse
+on one subproblem.
+	E.g. if looking for 5th order statistic in input array on length 10,
+	     and pivot ends in third position, you'd recurse on right side of
+	     pivot and look for 2nd order statistic
+
+
+Randomized selection
+=======================================
+RSelect (array A, length n, order statistic i)
+	0. if n = 1 return A[1]
+	1. choose pivot p from A uniformly at random
+	2. partition A around p
+	   let j = order statistic of p (new index of p)
+	3. if j = i return p
+	4. if j > i return RSelect(1st part of A, j-1, i)
+	5. (if j < i) return RSelect(2nd part of A, n-j, i-j)
+
+
+
+Properties of RSelect
+=======================================
+Claim: RSelect is correct (guaranteed to output ith order statistic)
+Proof: by induction [like optional QuickSort video]
+Running Time: depends on "quality" of chosen pivots
+
+If pivot always chosen in worst possible way: TH(n^2)
+
+Key: find pivot giving "balanced" split
+Best pivot: the median (but, this is circular reasoning...)
+	=> would get recurrence T(n) <= T(n/2) + O(n)
+	=> T(n) = O(n) [case 2 of Master Method]
+(this is just a sanity check... not actually feasible)
+
+Hope: random pivots will be "pretty good" "often enough"
+
+
+
+RSelect Theorem
+=======================================
+For every input of array of length n, the average running time
+of RSelect is O(n)
+- holds for every input
+- "average" over random pivot choices
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
