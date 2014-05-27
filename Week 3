@@ -214,6 +214,94 @@ Applications
 
 
 
+/////////////////////////////////////////////////////////////////////
+9.2 - Graph Representations
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+For undirected graph, n vertices, no parallel edges, connected, 
+min edges: n-1
+max edges: n(n-1)/2  (n choose 2)
+
+
+
+Sparse v. Dense graphs
+=======================================
+n = # vertices, m = # edges
+In most applications, m is OM(n) and O(n^2)
+- in "sparse graph," m is O(n) or close to it
+- in "dense graph," m is closer to TH(n^2)
+
+
+
+
+Adjacency Matrix
+=======================================
+Represent G by a nxn O-1 matrix A, where
+	A_ij = 1 <=> G has i-j edge  (i)----(j)
+Variants
+	- A_ij = # of i-j edges (if parallel edges)
+	- A_ij = weight of i-j edge (if any)
+	- A_ij = { +1 if (i)--->(j)
+	           -1 if (i)<---(j) }
+
+Space requirement: TH(n^2)
+Fine for dense graph, wasteful for sparse graph, impossible for massive graphs
+
+
+
+
+Adjacency Lists
+=======================================
+Ingredients
+	- array (or list) of vertices	[ TH(n) ]
+	- array (or list) of edges		[ TH(m) ]
+	- each edge points to its endpoints		[ TH(m) ]
+	- each vertex points to edges incident (1-hop) on it
+									[ TH(m) ] 1-to-1 correspondence with #3
+
+Space requirement: TH(m + n) or TH(max{m,n})
+
+
+Which is better? Depends on graph density and operations needed
+We'll focus on Adjacency Lists 
+	(good for graph search, usually dealing with MASSIVE graphs)
+	e.g. web links ~10^10. For adjacency matrix, that'd be 10^20.
+	     (10^80 ~= atoms in known universe)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
