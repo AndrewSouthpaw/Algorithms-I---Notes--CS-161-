@@ -213,10 +213,77 @@ Reason: look at each node in connected component of s at most once, each
 
 
 
+/////////////////////////////////////////////////////////////////////
+10.6 - Topological Sort
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+Toplogical ordering of directed graph G is labeling f of G's nodes s.t.:
+1. f(v)'s are the set {1, 2, ...,n}
+2. (u,v) in G => f(u) < f(v)
+
+Motivation: sequence tasks respecting precedence constraints
+Note: G has directed cycle => no topological ordering
+Theorem: no directed cycle => can compute topo ordering in O(m+n) time
+
+Note: Every directed acyclic graph has a sink vertex
+Reason: if not, can keep following outgoing arcs to produce directed cycle
+
+Straightforward algorithm:
+- let v be sink vertex of G
+- set f(v) = n
+- recurse on G-{v}
+
+Why does it work:
+	When v is assigned position i, all outgoing arcs already deleted =>
+	all lead to later vertices in ordering. 
+
+
+
+Topological Sort via DFS
+=======================================
+DFS(graph G, start vertex s)
+- mark s explored
+- for every edge (s,v):		// vertices considered in arbitrary order
+	- if v not yet explored:
+		- DFS(G,v)
+- set f(s) = current_label
+- current_label--;
+		
+DFS-Loop(graph G)
+- mark all nodes unexplored
+- current_label = n		// to keep track of ordering f values
+- for each vertex v in G:
+	- if v not yet explored 	// in some previous DFS call
+		- DFS(G,v)
+
+
+
+Running time: O(m+n).
+Reason: O(1) time per node, O(1) time per edge
+Correctness: show that if (u,v) is edge, then f(u) < f(v)
+Case 1: u visited by DFS before v
+	v will get explored. recursive call to v finishes before u. Thus, 
+	it will be assigned larger label.
+Case 2: v visited before u
+	u will not get explored b/c no directed cycles. v's recursive call finishes
+	before u's starts => f(v) > f(u)  QED
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////
+10.7 - Computing Strong Components - The Algorithm
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
 
