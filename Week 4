@@ -1,0 +1,96 @@
+Week 4
+
+
+
+
+
+=====================================================================
+Section 10 - Graph Search and Connectivity
+=====================================================================
+
+
+/////////////////////////////////////////////////////////////////////
+10.1 - Graph Search Overview
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+Motivations
+=======================================
+1. Check if network is connected
+  	 Bacon Number
+2. Driving directions
+3. Formulate plan (e.g. how to fill a Sudoku puzzle)
+	- nodes = partially completed puzzle, arcs = filling in one new square
+4. Compute the "pieces" (or "components") of a graph
+	- clustering, structure of the web graph, etc.
+
+
+
+Goals:
+	1. find everything findable from start vertex
+	2. don't explore anything twice  O(m+n) time
+
+Generic algorithm (Graph G, vertex s):
+	- initially s explored, other vertices unexplored
+	- while possible:
+		- choose edge (u,v) with u explored and v unexplored (if none, halt)
+		- mark v explored
+
+
+
+Claim: at end of algorithm, v explored <=> G has path s -> v
+Proof: (=>) easy induction on number of iterations
+	   (<=) By contradiction. Suppose G has path p from s to v. But, we say
+	        v unexplored at end of algorithm. Then t.e. edge (u,v) in P with
+	        u explored and w unexplored. But then algorithm would not have
+	        terminated, contradiction. QED.
+
+
+
+
+
+
+BFS v. DFS
+=======================================
+
+Many question: how to choose among possibly many "frontier" edges?
+
+Breadth-First Search (BFS)
+	- explore nodes in "layers"
+	- can compute shortest paths
+	- can compute connected components of undirected graph
+	- O(m+n) time using queue
+
+
+Depth-First Search (DFS)
+	- explore aggressively like a maze, backtrack when necessary
+	- compute topological ordering of directed acyclic graph
+	- compute connected components in directed graphs 
+	- O(m+n) using stack (or via recursion)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
