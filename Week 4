@@ -180,6 +180,27 @@ Running time: O(m+n)	O(1) per node, O(1) per edge in each BFS
 10.5 - Depth-First Search (The Basics)
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
+Advantages over BFS:
+- computes topological ordering of directed acyclic graph
+- computers strongly connected components of directed graphs
+
+
+
+Recursive version:
+DFS (graph G, start vertex s)
+- mark s explored
+- for every edge (s,v):
+	- if v unexplored
+		- DFS(g,v)
+
+
+Claim #1: at end, v marked explored <=> t.e. path s to v in G
+Reason: instantiation of generic search procedure
+
+Claim #2: running time O(n_s + m_s)
+Reason: look at each node in connected component of s at most once, each
+		edge at most twice
+
 
 
 
