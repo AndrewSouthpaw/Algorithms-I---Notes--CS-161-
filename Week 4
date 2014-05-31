@@ -132,6 +132,65 @@ Proof idea: each layer i node w is added to Q by a layer (i-1) node v via
 
 
 
+/////////////////////////////////////////////////////////////////////
+10.4 - BFS and Undirected Connectivity
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+Let G = (V,E) be an undirected graph.
+Connected components = the "pieces" of G
+Formal definition: equivalence classes of the relation u ~ v <=>  t.e. u-v
+				   path in G. (~ is an equivalence relation)
+	Equivalence relations:
+		1. reflexive (path to itself)
+		2. symmetrical (u-v == v-u)
+		3. transitive (u-v, v-w, then u-w)
+
+Goal: compute all connected components
+Why? - check if network disconnected
+	 - graph visualization
+	 - clustering
+
+
+
+Algorithm
+=======================================
+
+- all nodes unexplored
+[assume labeled 1 to n]
+- for i = 1 to n
+	- if i not yet explored	
+		- BFS(G,i)  // discovers i's connected components
+
+
+Note: finds every connected component
+Running time: O(m+n)	O(1) per node, O(1) per edge in each BFS
+
+
+
+
+
+
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////
+10.5 - Depth-First Search (The Basics)
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
