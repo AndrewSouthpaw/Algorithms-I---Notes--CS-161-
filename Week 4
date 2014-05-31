@@ -73,6 +73,86 @@ Depth-First Search (DFS)
 
 
 
+/////////////////////////////////////////////////////////////////////
+10.2 - Breadth-First Search
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+BFS(graph G, start vertex s)
+[all nodes initially unexplored]
+- mark s as explored
+- let Q = queue data structure, initialize with s
+- while Q != 0:
+	- remove the first node of Q, call it v
+	- for each edge (v,w):
+		- if w unexplored
+			- mark w as explored
+			- add w to Q at the end
+
+
+Claim #1: at end of BFS, v explored <=> G has path from s to v
+Reason: special case of generic algorithm
+
+Claim #2: running time of main while loop = O(n_s + m_s), where
+											n_s = # nodes reachable from s
+											m_s = # edges reachable from s
+
+
+
+
+
+
+
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////
+10.3 - BFS and Shortest Path
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+Goal: compute dist(v), the fewest # edges on path from s to v
+Extra code: initialize dist(v) = { 0 	if v = s
+								  +INF	if v != s  (will revise on running)
+- when considering edge (v,w):
+	- if w unexplored, set dist(w) = dist(v) + 1
+	
+Claim: at termination, dist(v) = i <=> v in ith layer 
+Proof idea: each layer i node w is added to Q by a layer (i-1) node v via
+			the edge (v,w)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
