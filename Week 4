@@ -408,6 +408,51 @@ Case 2 [v in C_2]:
 
 
 
+/////////////////////////////////////////////////////////////////////
+10.9 - Structure of the Web [Optional]
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+- vertices = web pages
+- (directed) edges = hyperlinks
+
+Question: what does the web graph look like? (assume you've already "crawled" it)
+Size ~= 200 million nodes, ~= 1 billion edges in 2000
+Reference: Broder et al. WWW 2000 
+	computed the SCCs of the web graph. (pre Map-Reduce / Hadoop)
+	
+Sort of looks like a bow tie...
+		
+		
+					  giant
+					   SCC                         out region
+					"core of             small SCCs reachable
+					 the web"                      from giant
+                                        (corporate web sites)
+in:
+SCCs that can reach
+giant SCC, but can't
+be reached (new web pages)
+
+
+
+1. all 4 parts (giant, in, out, tubes & tendrils) have roughly same size
+2. within CORE, very well connected ("small world" property [Milgram])
+									gave rise to "6 degrees of separation"
+3. outside, surprisingly poorly connected
+
+
+
+Modern web research
+1. temporal aspects - how does web graph evolve over time
+2. informational aspects - how does new info propagate
+3. finer-grained structure - how to define and compute "communities" in
+   information and social networks
+
+Recommended reading: Easley + Kleinberg, "Networks, Crowds, and Markets"
+
+
+
+
 
 
 
