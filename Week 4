@@ -285,9 +285,57 @@ Case 2: v visited before u
 10.7 - Computing Strong Components - The Algorithm
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
+Definition: strongly connected components (SCCs) of directed graph G
+are the equivalence classes of relation u~v <=> t.e path u->v AND
+a path v->u in G
 
 
 
+Kosaraju's Two-Pass Algorithm
+=======================================
+(given directed graph G)
+1. Let G_rev = G with all arcs reversed
+2. run DFS-Loop on G_rev	// compute "magical ordering" of nodes
+		// let f(v) = "finishing time" of each v in V
+3. run DFS-Loop on G	// discover SCCs one-by-one
+		// processing nodes in decreasing order of finishing times
+		// [SCCs = nodes with same "leader"]
+
+Running time: 2 * DFS = O(m + n)
+
+
+
+
+The 1st pass
+=======================================
+DFS-Loop(graph G)
+	global variable t = 0 	// for finishing times in 1st pass
+	[# of nodes processed so far]
+	global variable s = NULL // for leaders in 2nd pass
+	[current source vertex]
+	Assume nodes labeled 1 to n
+	for i = n down to 1
+		if i not yet explored
+			s := i
+			DFS(G,i)
+
+DFS(graph G, node i)
+	- mark i as explored	// for rest of DFS-loop
+	- set leader(i) := node s
+	- for each arc (i,j) in G:
+		- if j not yet explored:
+			- DFS(G,j)
+	- t++
+	- set f(i) := t		// i's finishing time
+
+
+
+The 2nd pass
+=======================================
+Nodes change names from original to their new finishing time:
+	node i = f(i)
+
+Leader node 9 = nodes found starting from node 9
 
 
 
