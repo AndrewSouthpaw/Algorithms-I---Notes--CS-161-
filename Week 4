@@ -356,6 +356,73 @@ Leader node 9 = nodes found starting from node 9
 
 
 
+/////////////////////////////////////////////////////////////////////
+10.8 - Computing Strong Components - The Analysis
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+Claim: SCCs of directed graph induce acyclci "metagraph"
+	- meta-nodes = the SCCs
+		C_1,...,C_k
+	- t.e. arc C->C_hat <=> t.e. arc (i,j) in G
+		with i in C, j in C_hat
+Why acyclic: a cycle of SCCs would collapse into one
+SCC of original graph G and G_rev are exactly the same.
+
+Lemma:
+	consider two "adjacent" SCCs in G:
+	Let f(v) = finishing times of DFS-Loop in G_rev
+	Then: max(v in C_1){f(v)} < max(v in C_2){f(v)} <-- assume true for now
+
+Corollary:
+	maximum f-value of G must lie in a "sink SCC"
+	2nd pass of DFS-Loop begins somewhere in sink SCC C*
+	first call to DFS discovers C* and nothing else
+	rest of DFS-Loop like recursing on G with C* deleted
+	successive calls to DFS(G,i) "peel off" SCCs one by one
+	
+	
+Proving the assumption:
+in G_rev, C_2 -> C_1 
+Let v = 1st node of C1 u C2 reached by 1st pass of DFS-Loop on G_rev
+Case 1 [v in C_1]:
+	all of C_1 explored before C_2 reached
+	Reason: no paths from C_1 to C_2 since meta-graph is acyclic)
+Case 2 [v in C_2]:
+	DFS(G_rev, v) won't finish until all of C_1 u C_2 completely explored.
+	Because C_1 is findable from C_2, all of C_1 gets explored before C_2.
+	f(v) > f(w) for all w in C_1
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
