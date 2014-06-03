@@ -1,0 +1,228 @@
+Week 5
+
+
+
+
+
+
+
+=====================================================================
+Section 11 - Dijkstra's Shortest-Path Algorithm
+=====================================================================
+
+
+/////////////////////////////////////////////////////////////////////
+11.1 - Dijkstra's Shortest Path Algorithm
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+
+Single-Source shortest paths
+=======================================
+Input: directed graph (G=(V,E)). m = |E|, n = |V|
+- each edge has nonnegative length l_e
+- source vertex s
+Output: for each v in V, compute L(v) = length of shortest s-v path in G
+Assumptions:
+	1. f.a. v in V, t.e. an s -> v path
+	2. l_e >= 0 f.a. e in E
+
+
+BFS only computes shortest path if l_e = 1 for every edge e
+Question: why not replace each edge e by directed path of l_e unit length edges
+Answer: blows up graph too much. Lengths could be 100, 1000, etc.
+		Too wasteful.
+
+
+
+
+
+
+
+Dijkstra's Algorithm
+=======================================
+Initialize:
+	- X = {S} // vertices processed so far
+	- A[S] = 0	// shortest path distances
+	- B[S] = empty path 	// computed shortest path
+							// not actually used in implementation, for 
+							// learning
+
+Main Loop
+	- while X != V:		// grow X by one node into world unexplored
+		- among all edges (v,w) in E with v in X, w not in X, pick
+		  pick one that minimizes A[v] + l_vw	(Dijkstra's greedy criterion)
+		  	// call it (v*,w*)
+		  	// looking at edges with tail in known sphere and head in unknown
+		- add w* to X
+		- set A[w*] = A[v*] + l_v*w*
+		- set B[w*] = B[w*] u (v*,w*)
+
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////
+11.2 - Example
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+Sucking nodes into the world of explored nodes, and then looking at all
+subsequent nodes and their "greedy score"
+
+
+Non-Example -- with negative lengths
+=======================================
+Question: why not reduce computing shortest paths with negative edge lengths
+to same problem with nonnegative edge lengths (by adding large constant to
+edge lengths)
+Problem: doesn't preserve shortest paths! 
+		path one: 1, -5	 (shortest)		=> 6, 0
+		path two: -2					=> 3	(shortest)
+		
+Also: Dijkstra's algorithm incorrect, getting messed up by the greedy score
+That's the trouble with being greedy... :)
+
+
+
+
+
+
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////
+11.3 - Correctness Proof
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+Theorem: for every directed graph with nonnegative edge lengths, Dijkstra's
+algorithm computes all shortest-path distances
+	A[v] = L(v) f.a. v in V
+	        ^-- true shortest path
+
+Proof: by induction on number of iterations
+Base case: A[s] = L(s) = 0
+Inductive step:
+Inductive hypothesis: all previous iterations correct
+	f.a. v in X, A[v] = L(v) and
+				 B[v] is true shortest s-v path in G
+
+In current iteration:
+	We pick edge (v*,w*) and add w* to X
+	We set B[w*] = B[v*] u (v*,w*)
+L(v*)+l_v*w*--^		^-- has length by L(v*)
+	Also: A[w*] = A[v*] + l_v*w* = L(v*) + l_v*w*
+
+Upshot:
+	in current iteration, we set:
+	1. A[w*] = L(v*) + l_v*w*	// output of path to w* is true shortest path 
+								// to v* + length v* to w*
+	2. B[w*] = bonafide path from s to w* with length above
+
+To finish proof: show that every s-w* path has
+	length >= L(v*) + l_v*w*  (if so, our path is the shortest)
+	
+So let P = any path s->w* path
+Every path s->w* has to cross frontier at least once
+	s in X, w* not in x. "cross the frontier"
+and so has form  s -> y -> (frontier) -> z -> w*
+				prefix    direct edge     suffix
+
+	l_yz
+	l_zw* >= 0 (no negative edges)
+	l_sy is some path to y, therefore >= length of shortest s-y path
+										 (inductive hypothesis)
+		 = L(y) = A[y] by inductive hypothesis
+
+Total length of path P: >= A[y] + l_yz + 0
+=> by Dijkstra's greedy criterion, A[v*] + l_v*w* <= A[y] + l_yz
+  length of our path <= length of competing path P
+  because we choose the path with the best greedy score
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////
+11.4 - Implementation and Running Time of Dijkstra's
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+Naive implementation running time: TH(mn)
+	- (n-1) iterations of while loop
+	- linear scan through all edges
+	- TH(m) work per iteration, TH(1) work per edge
+
+
+
+
+
+Heap Operations
+=======================================
+Question: we're doing minimum scans repeatedly, is there a way to keep it 
+around?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
