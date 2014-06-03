@@ -170,13 +170,192 @@ Naive implementation running time: TH(mn)
 	- TH(m) work per iteration, TH(1) work per edge
 
 
-
-
-
 Heap Operations
 =======================================
 Question: we're doing minimum scans repeatedly, is there a way to keep it 
 around?
+Heap property: at every node, key <= children's keys
+- perfectly balanced binary tree (height ~= log(base2)(n) )
+- extractMin by swapping up last leaf, bubbling down
+- insert via bubbling up
+- delete from middle (bubble up or down as needed)
+
+
+
+Invariants
+=======================================
+Invariant 1: elements in heap = vertices of V-X
+Invariant 2: for v n.i. X, key [v] = smallest Dijkstra greedy score of an edge
+									 (u,v) in E with u in X
+									 (+INF if no such edge exist)
+
+Point: by invariants, extractMin yields correct vertex w* to add to X next
+
+
+
+
+
+Maintaining the invariants
+=======================================
+When you add a new vertex into X, you'll need to update the keys that go out
+from w
+
+when w extracted from heap
+- for each edge (w,v) in E:
+	- if v in V-X (i.e. in heap)
+		// key update
+		- delete v from heap
+		- recompute key[v] = min{key[v], A[w]+l_wv}
+		- reinsert v into heap
+
+
+Run-time: dominated by heap operations. (O(log n) each)
+- (n-1) extractMins
+- each edge (v,w) triggers at most one Delete/Insert combo 
+	(if v added to X first)
+  (as opposed to vertex-centric view)
+So: # of heap operations is O(n+m) = O(m)  (since m dominates n, weakly connected)
+So: running time = O(m log n)   (like sorting)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+=====================================================================
+Section 12 - Heaps
+=====================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////
+12.1 - Data structures overview
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+Purpose: organize data so it can be accessed quickly and usefully
+Ex: lists, stacks, queues, heaps, search trees, hash tables, bloom filters,
+	union-find, etc.
+different data structures support different sets of operations
+Rule of thumb: choose "minimal" data structure that supports all the
+			   operations you need, and no more.
+
+
+Data structure levels
+	Level 0 = "what's a data structure?"
+	Level 1 = cocktail party awareness
+	Level 2 = comfortable using them as client, good sense of what is suitable
+	Level 3 = understands how they are implemented
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////
+12.2 - Heaps - Operations and Applications
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+- a container for objects that have keys
+	- employer records, network edges, events, etc.
+
+Insert: add new object to heap
+	[O(log n)]
+Extract-min: remove object in heap with minimum key value
+		     [ties broken arbitrarily, also possible extract-max]
+	[O(log n) - n = # objects in heap]
+
+HEAPIFY(n batched inserts in O(n) time), Delete (O(log n) time)
+
+
+
+Application: sorting
+=======================================
+Canonical use of heap: fast way to do repeated minimum computations
+Example: SelectionSort => O(n^2) 
+HeapSort: insert elements, then extract mins => O(n log n)
+		  => optimal for "comparison-based" sorting algorithm
+		  => pretty damn close to quicksort
+
+
+
+Application: Event Manager
+=======================================
+"Priority Queue" - synonym for heap
+Example: simulation (e.g. for a video game)
+	- objects = event records [action/update to occur at given time in future]
+	- keys = time event scheduled to occur
+	- Extract-Min => yields the next scheduled event
+
+
+
+
+Application: Median Maintenance
+=======================================
+I give you: sequence x1,...,xn of numbers, one-by-one
+You tell me: at each time step i, the median of the set
+Constraint: use O(log i) time at each step i.
+Solution: maintain heaps H_low : support extractMax
+						 H_high: support extractMin
+Maintain invariant that 1/2 smallest (largest) elements in H_low (H_high)
+You check: 
+	1. can maintain invariant with O(log i) work
+	2. given invariant, can compute median in O(log i) work
+
+Can maintain balance 50/50 split
+
+
+
+
+Application: Speeding up Dijkstra
+=======================================
+- naivie implementation: O(nm) -- # loop it * linear scan for min comp
+- with heads -> run time O(m log n)
+
+
+
+
+
+
+
+
+
 
 
 
