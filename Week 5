@@ -380,6 +380,240 @@ Application: Speeding up Dijkstra
 
 
 
+=====================================================================
+Section 13 - Balanced Binary Search Tree
+=====================================================================
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////
+13.1 - BSTs - Operations and Applications
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+
+Sorted arrays
+	Operations								Running time
+		Search								[ O(log n) 	]
+		Select (given order stat. i)		[ O(1)		]
+		Min/Max								[ O(1)		]
+		Predecessor/Successor (given ptr)	[ O(1)		]
+		Rank (# of keys <= given val)		[ O(log n)	]
+		Output in sorted order				[ O(n)		]
+		Insert/Delete						[ O(n) 		] <-- ew...
+
+
+
+BSTs: like sorted array + faster insert/delete
+	Search, select, min/max, pred/succ, rank 	=> O(log n)
+	Output in sorted order => O(n)
+	Insert, delete => O(log n)
+
+
+
+
+
+
+
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////
+13.2 - BST Basics, Part I
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+- one node per key
+- 3 ptrs: parent, left, right
+- Search tree property: left subtree:  vals < node
+						right subtree: vals > node
+- can handle ties as long as convention establish, one is <= or >=.
+- many possibilities for set of keys. Height from log(base2)(n) to n
+
+
+
+
+/////////////////////////////////////////////////////////////////////
+13.3. - BST Basics, Part II
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+Minimum: 
+	- start at root
+	- follow left child ptrs until leaf reached
+Maximum: follow right child ptrs until leaf reached
+
+Predecessor of key k
+	- easy case: if k's left subtree nonempty, return max key in left subtree
+	- otherwise: follow parent ptrs until you get key < k (or "turn left")
+	- need base case if predecessor doesn't exist
+
+In-order traversal:
+	- Do: T_l, then root, then T_r
+
+Deletion:
+	- Search for k
+	- Easy case: k has no children
+		- delete k's node from tree
+	- Medium case: k's node has one child
+		- "splice out" k's node (unique child assumes position held by k)
+	- Hard case: k's node has two children  [ O(height) ]
+		- compute k's predecessor l
+			[easy: get max of left child]
+		- swap k and l
+		- delete k
+		- at end you have valid search tree
+		
+Select and rank:
+(store extra info at each tree node about tree itself)
+Ex: size(x) = # of tree nodes in subtree rooted at x
+			= size(y) + size(z) + 1
+
+Select:
+	- start at root x, with children y and z
+	- let a = size(y) [a = 0 if x has no left child]
+	- if a = i-1 return x's key
+	- if a >= i recursively compute ith o.statistic on y
+	- if a < i-1 recursively compute (i-a-1) o.statistic on z
+	[O(height)]
+
+
+Rank:
+	[Do this]
+
+
+
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////
+13.4 - Red-Black Trees
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+Red-black trees [Bayer '72]
+See also AVL trees, splay trees, B trees
+
+
+
+Red-Black Invariants
+=======================================
+1.	Each node red or black
+2.	Root is black
+3.	No 2 reds in a row [red node => only black children]
+4.	Every root-NULL path (e.g. unsuccessful search) has same # black nodes
+
+Every red-black tree has height <= 2 * log(base2)(n + 1)
+
+
+
+Proof:
+	If every root-NULL path has >= k nodes, then tree includes (at top)
+	a balanced search tree of depth k-1
+	=> size n of tree at least 2^k-1
+	=> k <= log(base2)(n+1)
+	Thus in red-black tree with n nodes, there is root-NULL path with at most
+	log(base2)(n+1) black nodes
+	By 4th invariant: every root-NULL path has <= log(base2)(n+1) black nodes
+	By 3rd invariant: no two reds in a row, so at most reds can double
+		<= 2*log(base2)(n+1) total nodes.	QED
+
+
+
+
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////
+13.5 - Rotations
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+Key primitive: rotations. Common to all BST implementations
+Locally rebalance subtrees at node in O(1) time
+Left rotation:  (of parent x and right child y)
+		p
+		x
+	A		y
+	 	  B    C
+	 (x<y)
+	 A < x (and y)
+	 C > y (and x)
+	 B > x, B < y
+	 
+	Essentially invert relationship x, y; y becomes parent, x is child
+				p
+				y
+			x		C
+		  A   B
+
+
+Right rotation: (of parent x and left child y)
+		x
+	y		C
+   A  B
+   
+   
+		y
+	A		x
+		   B  C
+
+
+Property of rotation: maintains search tree property in O(1) time
+
+
+
+
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////
+13.6 - Insertion in Red-Black Tree
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+Idea: do regular insert/delete, then recolor or use rotations until
+	  invariants are restored
+
+Insert(x):
+	1. insert x as usual (makes x a leaf)
+	2. try coloring x red
+	3. if x's parent y is black, done
+	4. else y is red => y has black parent w
+		Case 1: other child z of x's grandparent w is also red
+						w
+					z		y
+						   x
+				recolor y,z black and w red
+			=> either restores inv. (3) or propagates double red upward
+				can only happen O(log n) times
+				if you reach root, recolor it black => preserves inv. (4)
+
+		
+		Case 2: let x,y be current double-red, x the deeper node. Let w = x's
+		grandparent. Suppose w's other child (!= y) is NULL or black node z.
+						w
+					z		y
+						   x   C
+						 A  B
+
+		Can eliminate double-red in O(1) time via 2-3 rotations and recolorings
+		
+
+
 
 
 
