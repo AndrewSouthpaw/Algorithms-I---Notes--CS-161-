@@ -16,6 +16,198 @@ Section 14 - Hashing - The Basics
 
 
 /////////////////////////////////////////////////////////////////////
-13.1 - BSTs - Operations and Applications
+14.1 - Hash Tables - Applications and Operations
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+Purpose: maintain evolving set of stuff
+Insert: add new record
+Delete: delete existing record
+Lookup: check for a record
+also called a "dictionary"
+Guarantee: all these ops run in O(1) time
+
+
+
+Application: De-Duplication
+=======================================
+Given: "stream" of objects (linear scan through huge file, or objects arriving
+						    in real time)
+Goal: remove duplicates (keep track of unique objects)
+Solution: look up each object in hash table. If not found, insert into table.
+
+
+
+
+
+
+The 2-SUM Problem
+=======================================
+Input: unsorted array of n integers. Target sum t.
+Goal: whether there are two numbers x,y with x + y = t.
+Naive solution: O(n^2) time via exhaustive search
+Better: 1. sort A (O(n log n))
+		2. for each x in A, look for t-x in A via binary search (O(n log n))
+Even better:
+	(look for work where there's lots of lookups)
+	1. insert elements of A into hash table H  [O(n)]
+	2. for each x in A, lookup t-x in H		   [O(1)]
+
+
+
+
+
+
+Other applications
+=======================================
+- symbol tables in compilers
+- blocking network traffic
+- search algorithms (e.g. game tree exploration)
+	- use hash table to avoid exploring any configuration more than once
+
+
+	
+
+
+
+
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////
+14.2 - Hash Tables Implementation - Part I
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+Setup: universe U (all possible options; generally, REALLY big: all names,
+				   all chess board configurations, etc.)
+Goal: maintain evolving set S <= U
+
+Naive solutions:
+	1. array-based. O(1) ops, but O(U) space
+	2. list-based. O(S) space, but O(S) lookup
+
+Our solution:
+	1. pick n = # of "buckets" ~= |S|
+	2. choose hash function h: U -> {0,1,2,...,n-1} bucket number
+	3. use array A of length n, store x in A[h(x)]
+
+
+
+Collisions
+=======================================
+
+(Sidenote)
+It takes only 23 people with random birthdays before you have 50% chance of
+same birthday. 
+	367 <-- 100%
+	57 <-- 99%
+	184 <-- 99.99%
+"Birthday 'paradox'"  With calendar of k days, you need sqrt(k) to get 50% chance
+(/Sidenote)
+
+
+
+Collision: distinct x,y in U such that h(x) = h(y)
+
+Solution #1: (separate) chaining. Keep linked list in each bucket
+	- given key x, perform ops in the list in A[h(x)]
+
+Solution #2: open addressing. (only one object per bucket)
+	- hash function now specifices "probe sequence" h_1(x), h_2(x),...
+	  keep trying til find open slot
+	- example: linear probing (lookup consecutively)
+			   double hashing (use 2 hash functions, where #2 is the shift)
+
+
+Comparison:
+	- if space is premium, use open addressing
+	- deletion trickier with open addressing
+	- or... just implement both and see how they perform
+
+
+
+
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////
+14.3 - Hash Tables Implementation - Part II
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+O(list length) could be from m/n to m for m objects for Insert/Delete in chaining
+What makes good hash function:
+	1. spread data uniformly: "gold standard" = completely random hashing
+	2. evaluating hash function runs in constant time
+	3. deterministic. Same key = same hash
+
+Bad hash functions for phone numbers:
+	- terrible: h(x) = 1st 3 digits of x
+	- mediocre: h(x) = last 3 digits of x
+
+Bad hash functions for keys = memory locations (mult of 2):
+	- bad: h(x) = x % 1000 => all odd buckets guaranteed to be empty
+
+
+Quick-and-Dirty Hash Functions
+=======================================
+(objects U) ----> (integers)    ---->    (buckets)
+		(hash code)		(compression function)
+
+Hash code - e.g. conversion strings to integers
+Compression function - e.g. the mod n function
+How to choose n = # of buckets:
+	1. choose n to be a prime (within constant factor of # of objects in table)
+			- avoids pathological outputs of mod function
+	2. not too close to power of 2
+	3. not too close to power of 10
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
