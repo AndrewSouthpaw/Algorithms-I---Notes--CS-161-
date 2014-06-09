@@ -189,6 +189,219 @@ How to choose n = # of buckets:
 
 
 
+=====================================================================
+Section 15 - Universal Hashing
+=====================================================================
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////
+15.1 - Pathological Data Sets
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+Load factor
+=======================================
+alpha = # objects in hash table / # of buckets in hash table
+Note: 1. only chaining works for hash tables w/ load factors > 1.
+	  2. alpha = O(1) is necessary condition for ops to run in const time
+	  3. with open addressing, need alpha << 1
+Problem: perfect hash function does not exist. For every hash function, there
+	is a pathological data set. 
+Reason: fix hash function h, assume |U| >> n
+	=> a la Pigeonhole Principle, t.e. bucket i s.t. at least |U|/n elements
+	of U hash to i under h, because of compression.
+
+
+
+Pathological data in the real world
+=======================================
+Reference: Crosby and Wallach, USENIX 2003.
+Main point: can paralyze several real-world systems (e.g. network intrusion
+		detection) by exploiting badly designed hash functions
+	- open source
+	- overly simplistic hash function
+	- easy to reverse engineer pathological data set
+
+
+
+
+Solutions
+=======================================
+1. use cryptographic hash function (e.g. SHA-2)
+	- infeasible to reverse engineer a pathological data set
+2. use randomization
+	- design family H of hash functions s.t. f.a. data sets S, "almost all"
+	  functions h in H spread S out "pretty evenly"
+	  (similar to QS guarantee)
+
+
+
+
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////
+15.2 -- optional
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+=====================================================================
+Section 16 - Bloom Filters
+=====================================================================
+
+
+
+
+/////////////////////////////////////////////////////////////////////
+16.1 - Bloom Filters - The Basics
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+Supported operations
+=======================================
+Reason: fast Inserts and Lookups
+Comparison to HashTables:
+	Pros:
+		- more space efficient
+	Cons:
+		- can't store an associated object
+		- no deletions (in vanilla versions)
+		- small false positive probability (can mistakenly say you have inserted
+											something you haven't)
+
+
+
+
+
+Applications
+=======================================
+Original: early spellcheckers
+Canonical: list of forbidden passwords
+Modern: network routers
+		- limited memory, need to be super-fast
+		- keep track of blocked IPs, etc
+
+
+
+
+
+
+
+
+Under the hood
+=======================================
+Ingredients
+	1. array of n bits (so n / |S| = # of bits per object in data set S)
+	2. k hash functions h_1,...,h_k (k = small constant)
+
+Insert(x):
+	for i = 1,2,...,k
+		set A[h_i(x)] = 1		// regardless of previous bit value
+
+Lookup(x):
+	return TRUE <=> A[h_i(x)] = 1 for every i = 1,2,...,k
+Note: no false negatives. Bits never reset to 0.
+Note: some false positives. Chance that combination of other keys caused the
+	  bits of this key to be 1.
+
+
+
+
+
+
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////
+16.2 - Heuristic Analysis
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+Fundamental tradeoff: space for bits v. likelihood of error
+Assume: [unjustified] all h_i(x)'s uniformly random and independent across
+		different i's and x's
+Setup: n bits, insert data set S into bloom filter
+Note: for each bit of A, probability it's set to 1 is:  1-(1-1/n)^(k|S|)
+Note: Probability bit = 0 => (1-1/n)^(k|S|)
+So probability bit = 1 => 1 - Pr=0
+Chance of surviving single pass: 1-1/n
+Number of passes/darts: k*|S|
+
+Recall 1+x <= e^x
+
+
+1-(1-1/n)^(k|S|)	~= 1 - e^(-k|S|/n) 
+					= 1 - e^(-k/b) where b = bits per object
+Thus, more bits you have, the closer you get to 1, thus probability goes to 0
+
+
+[Pr bit=1] ~= 1 - e^(-k/b)
+So, under assumption, for x not in S, false positive probability is
+	<= [1 - e^(-k/b)]^k
+		  ^-- error rate epsilon
+
+How to set k?
+	for fixed b, epsilon is minimized by setting k ~= (ln 2) * b
+												   ~= 0.693  * b
+
+Plugging back in:
+	epsilon ~= (1/2)^(ln 2 * b)  => exponentially small in b
+	or...
+	b ~= 1.44 log(base 2)(1/epsilon)
+
+Ex: with b = 8, choose k = 5 or 6, error ~= 2%
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
